@@ -7,42 +7,5 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Learning Deep Learning</title>
-      <link>/posts/new-blog/</link>
-      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/new-blog/</guid>
-      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
-&lt;p&gt;To start from I am using this book hosted at &lt;a href=&#34;https://d2l.ai/chapter_preface/index.html&#34;&gt;https://d2l.ai/chapter_preface/index.html&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Machine learning was not known that much back then as much it is known now.&lt;/p&gt;
-&lt;p&gt;Testing the potential of deep learning presents unique challenges because any single application brings together various disciplines. Applying deep learning requires simultaneously understanding.
-i) the motivation for casting a problem in a particular way.
-ii) The mathematical form of a given model
-iii) The optimization algorithms for fitting the models to a data
-iv) The statistical principles that tells us when we should expect our models to generalize unseen data and practical methods for certifying that they have in fact generalized.
-v) the engineering techniques required to train models efficiently, navigating the pitfalls of numerical computing and getting the most of the available hardware.&lt;/p&gt;</description>
-      <content>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
-&lt;p&gt;To start from I am using this book hosted at &lt;a href=&#34;https://d2l.ai/chapter_preface/index.html&#34;&gt;https://d2l.ai/chapter_preface/index.html&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Machine learning was not known that much back then as much it is known now.&lt;/p&gt;
-&lt;p&gt;Testing the potential of deep learning presents unique challenges because any single application brings together various disciplines. Applying deep learning requires simultaneously understanding.
-i) the motivation for casting a problem in a particular way.
-ii) The mathematical form of a given model
-iii) The optimization algorithms for fitting the models to a data
-iv) The statistical principles that tells us when we should expect our models to generalize unseen data and practical methods for certifying that they have in fact generalized.
-v) the engineering techniques required to train models efficiently, navigating the pitfalls of numerical computing and getting the most of the available hardware.&lt;/p&gt;
-&lt;h2 id=&#34;installation&#34;&gt;Installation&lt;/h2&gt;
-&lt;p&gt;As we&amp;rsquo;ll be using python as the core language for creating our notebook, we need to have python installed in our machine and also the jupyter notebook.&lt;/p&gt;
-&lt;p&gt;Also we need to install miniconda - Miniconda, a lightweight distribution of the popular Anaconda Python distribution, provides a powerful solution for managing package dependencies and creating isolated virtual environments.&lt;/p&gt;
-&lt;p&gt;Download from here - &lt;a href=&#34;https://docs.anaconda.com/miniconda/install/&#34;&gt;https://docs.anaconda.com/miniconda/install/&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;Install the pytorch framework -&lt;/p&gt;
-&lt;p&gt;pip install torch==2.0.0 torchvision==0.15.1&lt;/p&gt;
-&lt;p&gt;Installing the d2l package that is created by the writers of this book which encapsulates all the commonly used functions and classes found throughout the book.&lt;/p&gt;
-&lt;p&gt;pip install d2l==1.0.3&lt;/p&gt;
-&lt;p&gt;dsfjasfadnii
-sdjsjj&lt;/p&gt;
-</content>
-    </item>
-    
   </channel>
 </rss>
