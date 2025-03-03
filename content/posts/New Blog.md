@@ -39,6 +39,8 @@ Installing the d2l package that is created by the writers of this book which enc
 pip install d2l==1.0.3
 
 
+dsfjasfadnii
+sdjsjj
 
 
 
