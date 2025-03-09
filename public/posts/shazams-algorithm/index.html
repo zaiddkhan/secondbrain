@@ -186,8 +186,8 @@ But that&rsquo;s not the reality Shazam AI is not a reality. So what algorithm a
         <p>Shazam, the music finding app.</p>
 <p>Hearing the name and utility it provides. The first thought anyone would&rsquo;ve in their mind about the underlying tech would be that they have to be using some kind of CNN (convolutional neural network) model in their machine learning algorithm.</p>
 <p>But that&rsquo;s not the reality Shazam AI is not a reality. So what algorithm are they actually using and why this is so fast in searching from a billion songs out there in the world.</p>
-<p>Their algorithm consists for various audio transformations and utilising theories from the past. And simply playing around with the frequencies of the audio.
-These things just made me curious and can&rsquo;t help myself but to deeply understand each aspect of Shazam&rsquo;s algorithm to understand Why it works the way it work. And how FFT ( Fast Fourier Transformation ) utilised in the process. So, as I do my research and learn new things on the go, its better that I document everything, being beneficial for both, staying in my mind for a longer time and helping others who also want to understand the algorithm.</p>
+<p>Their algorithm consists for various audio transformations and utilizing theories from the past. And simply playing around with the frequencies of the audio.
+These things just made me curious and can&rsquo;t help myself but to deeply understand each aspect of Shazam&rsquo;s algorithm to understand Why it works the way it work. And how FFT ( Fast Fourier Transformation ) utilized in the process. So, as I do my research and learn new things on the go, its better that I document everything, being beneficial for both, staying in my mind for a longer time and helping others who also want to understand the algorithm.</p>
 <p>Also after figuring out the technical details of the algorithm I will be developing my own version of it in Go Lang.</p>
 <p>Overview of the most important components/processes of the algorithm.</p>
 <ol>
@@ -196,7 +196,7 @@ These things just made me curious and can&rsquo;t help myself but to deeply unde
 <li>Spectograms</li>
 <li>Hashing and Searching</li>
 </ol>
-<p>!<img src="/images/Pasted%20image%2020250303162835.png" alt="Image Description"></p>
+<p>![[Pasted image 20250303162835.png]]</p>
 <h1 id="audio-sampling--">Audio Sampling -<a href="#audio-sampling--" class="hanchor" ariaLabel="Anchor">#</a> </h1>
 <p>What is a sound?</p>
 <p>A sound is just a collection of waves travelling through a medium at a certain frequency and with an amplitude which an be decrypted by the human ears.</p>
@@ -215,7 +215,7 @@ Digital audio , is the discrete numerical value converted from analogs audio (au
 <p>A fourier transform is a way of decomposing a signal into pure sine waves that allows
 This transformation enables critical analysis and processing of signals by breaking them into their constituent sinusoidal components.</p>
 <p>Audio is recorded in time-domain. The time domain signal represents the change of amplitude over time, using the FFT it is possible to represent any time-domain signal by simply giving the frequencies, amplitudes and phases corresponding to each sinusoid.</p>
-<p>!<img src="/images/Pasted%20image%2020250305141720.png" alt="Image Description"></p>
+<p>![[Pasted image 20250305141720.png]]</p>
 <p>We&rsquo;ll be implementing the FFT in Go,</p>
 <h2 id="spectrograms--">Spectrograms -<a href="#spectrograms--" class="hanchor" ariaLabel="Anchor">#</a> </h2>
 <p>The FFT algorithm outputs a spectrogram of a particular wave.</p>
@@ -238,7 +238,7 @@ Now these peaks are used as a key in a hash table, other columns in the hash tab
 <p>For Hashing, Shazam uses something known as combinatorial hashing.
 Combinatorial hashing refers to the process of creating a hash (a unique identifier) by combining <strong>multiple features</strong> extracted from a signal. In the context of Shazam it is the time-frequency peaks</p>
 <p>Storing these in a Hash Table will give us a o(1) time complexity while searching through the database.</p>
-<p>!<img src="/images/Pasted%20image%2020250305145400.png" alt="Image Description"></p>
+<p>![[Pasted image 20250305145400.png]]</p>
 <p>Database Lookup</p>
 <ul>
 <li>
@@ -258,52 +258,160 @@ The <strong>consistency of the timestamp alignments</strong>.</p>
 <li>Converting the input mp3 file into wav.
 Why wav? WAV is known for its high resolution, it helps us in retaining the high quality of audio even in large audio files.</li>
 </ol>
-<p><code>func mp3ToWav(file multipart.File) ([]byte, error) {</code><br>
-<code>decoder, err := mp3.NewDecoder(file)</code><br>
-<code>if err != nil {</code><br>
-<code>return nil, fmt.Errorf(&quot;failed to decode MP3: %v&quot;, err)</code><br>
-<code>}</code><br>
-<code>var wavBuffer bytes.Buffer</code><br>
-<code>enc := wav.NewEncoder(&amp;wavBuffer, decoder.SampleRate(), 16, 1, 1)</code></p>
-<pre><code>`buf := make([]byte, 1024)`  
-`intBuffer := &amp;audio.IntBuffer{`  
-   `Format: &amp;audio.Format{`  
-      `NumChannels: 1,`  
-      `SampleRate:  decoder.SampleRate(),`  
-   `},`  
-   `Data: make([]int, 0, 1024),`   
-`}`  
-
-`for {`  
-   `n, err := decoder.Read(buf)`  
-   `if err == io.EOF {`  
-      `break`  
-   `}`  
-   `if err != nil {`  
-      `return nil, fmt.Errorf(&quot;failed to read MP3 data: %v&quot;, err)`  
-   `}`  
-
-   `for i := 0; i &lt; n; i += 2 {`  
-      `sample := int16(buf[i]) | int16(buf[i+1])&lt;&lt;8`  
-      `intBuffer.Data = append(intBuffer.Data, int(sample))`  
-   `}`  
-   `if err := enc.Write(intBuffer); err != nil {`  
-      `return nil, fmt.Errorf(&quot;failed to write WAV data: %v&quot;, err)`  
-   `}`  
-   `intBuffer.Data = intBuffer.Data[:0]`  
-`}`  
-
-`if err := enc.Close(); err != nil {`  
-   `return nil, fmt.Errorf(&quot;failed to close WAV encoder: %v&quot;, err)`  
-`}`  
-
-`return wavBuffer.Bytes(), nil`  
-</code></pre>
-<p><code>}</code></p>
-<ol start="2">
+<pre tabindex="0"><code>`func mp3ToWav(file multipart.File) ([]byte, error) {`  
+    `decoder, err := mp3.NewDecoder(file)`  
+    `if err != nil {`  
+       `return nil, fmt.Errorf(&#34;failed to decode MP3: %v&#34;, err)`  
+    `}`  
+    `var wavBuffer bytes.Buffer`  
+    `enc := wav.NewEncoder(&amp;wavBuffer, decoder.SampleRate(), 16, 1, 1)`  
+  
+    `buf := make([]byte, 1024)`  
+    `intBuffer := &amp;audio.IntBuffer{`  
+       `Format: &amp;audio.Format{`  
+          `NumChannels: 1,`  
+          `SampleRate:  decoder.SampleRate(),`  
+       `},`  
+       `Data: make([]int, 0, 1024),`   
+    `}`  
+  
+    `for {`  
+       `n, err := decoder.Read(buf)`  
+       `if err == io.EOF {`  
+          `break`  
+       `}`  
+       `if err != nil {`  
+          `return nil, fmt.Errorf(&#34;failed to read MP3 data: %v&#34;, err)`  
+       `}`  
+  
+       `for i := 0; i &lt; n; i += 2 {`  
+          `sample := int16(buf[i]) | int16(buf[i+1])&lt;&lt;8`  
+          `intBuffer.Data = append(intBuffer.Data, int(sample))`  
+       `}`  
+       `if err := enc.Write(intBuffer); err != nil {`  
+          `return nil, fmt.Errorf(&#34;failed to write WAV data: %v&#34;, err)`  
+       `}`  
+       `intBuffer.Data = intBuffer.Data[:0]`  
+    `}`  
+  
+    `if err := enc.Close(); err != nil {`  
+       `return nil, fmt.Errorf(&#34;failed to close WAV encoder: %v&#34;, err)`  
+    `}`  
+  
+    `return wavBuffer.Bytes(), nil`  
+`}`
+</code></pre><ol start="2">
 <li>Next step after generating our wav file will be creating a spectogram out of it, it&rsquo;ll be done using the STFT (Short-Time Fourier Transform). <em>STFT</em> is an extension of FFT that computes the Fourier Transform of short, overlapping segments of a signal over time.</li>
 </ol>
+<pre tabindex="0"><code>`func computeSpectrogram(data []float64, sampleRate, windowSize, hopSize int) [][]float64 {
 
+	`numFrames := (len(data) - windowSize) / hopSize
+	`spectrogram := make([][]float64, numFrames)
+
+	`for i := 0; i &lt; numFrames; i++ {
+	` start := i * hopSize
+		`end := start + windowSize
+
+		// Extract a frame
+		frame := make([]float64, windowSize)
+		copy(frame, data[start:end])
+
+		// Apply Hann window
+		window.Apply(frame, window.Hann)
+
+		// Compute FFT
+		fftOut := fft.FFTReal(frame)
+
+		// Compute magnitude spectrum (only the first half, since it&#39;s symmetric)
+		magnitude := make([]float64, len(fftOut)/2)
+		for j := 0; j &lt; len(magnitude); j++ {
+			magnitude[j] = cmplx.Abs(fftOut[j])
+		}
+
+		spectrogram[i] = magnitude
+	`}
+
+	`return spectrogram
+`}`
+</code></pre><h3 id="code-explanation">code explanation:<a href="#code-explanation" class="hanchor" ariaLabel="Anchor">#</a> </h3>
+<p>Input parameters :</p>
+<ol>
+<li>data[]float64: The input audio signal, represented as a slice of float</li>
+<li>sample rate : The sampling rate of the audio signal</li>
+<li>window size : The size of the window used to compute the STFT.</li>
+<li>hopSize : The number of samples by which the window is shifted for each frame.</li>
+</ol>
+<p>computing the number of frame:</p>
+<p>numFrame := (len(data) - windowSize) / hopSize</p>
+<ul>
+<li>The total number of frames is determined by how many times the window can hop over the signal</li>
+</ul>
+<p>Processing each frame.
+The loop iterates over each frame to compute its frequency spectrum.</p>
+<p>Compute the Magnitude Spectrum</p>
+<ul>
+<li>The magnitude of each frequency component is computed using cmplx.Abs, which calculates the absolute value of a complex number.</li>
+</ul>
+<ol start="3">
+<li>Generating Fingerprints</li>
+</ol>
+<ul>
+<li>For searching through the spectrograms, we&rsquo;ll first extract the peaks and pair them to serve as keys in our hash table, along which the value saved will be the song id and time offset of the song.</li>
+</ul>
+<p><code>func findPeaks(spectrogram [][]float64) []Peak { </code>var peaks []Peak
+<code>for t, frame := range spectrogram { ``  for f, magnitude := range frame { ``    if isLocalMax(spectrogram, t, f) { peaks = append(peaks, Peak{Time: t, Frequency: Magnitude:    </code>magnitude})
+<code>} </code>}
+<code>} </code>return peaks
+}``</p>
+<ol start="4">
+<li>Hash Generation</li>
+</ol>
+<ul>
+<li>Pairing peaks within a time window and create a hash key</li>
+</ul>
+<pre tabindex="0"><code>func generateHashes(peaks []Peak) []Hash {
+    var hashes []Hash
+    for i := 0; i &lt; len(peaks); i++ {
+        for j := i + 1; j &lt; len(peaks); j++ {
+            if peaks[j].Time - peaks[i].Time &lt;= maxTimeDelta {
+                hash := createHash(peaks[i], peaks[j])
+                hashes = append(hashes, hash)
+            }
+        }
+    }
+    return hashes
+}
+
+func createHash(peak1, peak2 Peak) uint32 {
+    // Combine frequency and time difference into a hash
+    return uint32(peak1.Frequency)&lt;&lt;16 | uint32(peak2.Frequency)&lt;&lt;8 | uint32(peak2.Time-peak1.Time)
+}
+</code></pre><ol start="5">
+<li>Searching and voting mechanism</li>
+</ol>
+<ul>
+<li>Using a histogram to count the occurrences of each (SongID, TimeOffset ) pair</li>
+<li>The song with the highest count is the best match.</li>
+</ul>
+<pre tabindex="0"><code>func findBestMatch(matches map[string][]int) (string, int) {
+    hist := make(map[string]int)
+    for songID, offsets := range matches {
+        for _, offset := range offsets {
+            hist[songID]++
+        }
+    }
+
+    var bestSong string
+    var maxCount int
+    for songID, count := range hist {
+        if count &gt; maxCount {
+            bestSong = songID
+            maxCount = count
+        }
+    }
+    return bestSong, maxCount
+}
+</code></pre>
       </div></div>
 
   

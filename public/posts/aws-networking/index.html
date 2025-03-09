@@ -197,7 +197,7 @@ A VPC is a logically isolated portion of the AWS cloud within a region.</p>
 It can&rsquo;t span across multiple az&rsquo;s.</p>
 <p>VPC Router - It takes care of all the routing and data connection that goes out of the subnet , i can be routed to another subnet or somewhere outside in the internet.
 The vpc router is not something that we can see all we see is the route table from where destination and target are configured.</p>
-<p>!<img src="/images/Pasted%20image%2020250305201409.png" alt="Image Description"></p>
+<p>![[Pasted image 20250305201409.png]]</p>
 <p>To connect our VPC to the internet there is something present known as the Internet Gateway, that allows to send data out to the internet, egress traffic. And allows data to travel from the internet to the vpc, ingress traffic. There can be only one internet gateway per vpc.</p>
 <p>We configure our route table to the internet gateway id that tells it to send all the traffic that doesn&rsquo;t fit one of the networks in the route table to the internet gateway.</p>
 <p>There can be multiple vpc&rsquo;s in a single aws region
@@ -209,8 +209,8 @@ Each vpc has a different block of IP addresses .</p>
 And they fit within the overall address block. But they have a different subnet mask,
 so essentially thats a subset of the overall available addresses and this is why it&rsquo;s really important to make sure we specify our cidr blocks correctly so that we have enough networks and enough hosts per network.</p>
 <p>A high level overview of each of the component:</p>
-<p>!<img src="/images/Pasted%20image%2020250306094316.png" alt="Image Description"></p>
-<p>!<img src="/images/Pasted%20image%2020250306094724.png" alt="Image Description"></p>
+<p>![[Pasted image 20250306094316.png]]</p>
+<p>![[Pasted image 20250306094724.png]]</p>
 <h3 id="defining-vpc-cidr-blocks">Defining VPC CIDR Blocks<a href="#defining-vpc-cidr-blocks" class="hanchor" ariaLabel="Anchor">#</a> </h3>
 <p>Rules and Guidelines</p>
 <ul>
@@ -220,8 +220,8 @@ so essentially thats a subset of the overall available addresses and this is why
 <li>The first four and last IP address are not available for use.</li>
 <li>AWS recommend to use CIDR blocks from the RFC1918 ranges:</li>
 </ul>
-<p>!<img src="/images/Pasted%20image%2020250306203630.png" alt="Image Description"></p>
-<p>!<img src="/images/Pasted%20image%2020250306203827.png" alt="Image Description"></p>
+<p>![[Pasted image 20250306203630.png]]</p>
+<p>![[Pasted image 20250306203827.png]]</p>
 <p>10.0.0.0/16</p>
 <p>Subnet 1 - 10.0.1.0/24
 Subnet 2 - 10.0.2.0/24</p>
@@ -241,7 +241,7 @@ Subnet 2 - 10.0.2.0/24</p>
   </thead>
   <tbody>
       <tr>
-          <td>!<img src="/images/Pasted%20image%2020250306204321.png" alt="Image Description"></td>
+          <td>![[Pasted image 20250306204321.png]]</td>
       </tr>
   </tbody>
 </table>

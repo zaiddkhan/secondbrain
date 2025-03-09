@@ -28,7 +28,7 @@ It can't span across multiple az's.
 VPC Router - It takes care of all the routing and data connection that goes out of the subnet , i can be routed to another subnet or somewhere outside in the internet.
 The vpc router is not something that we can see all we see is the route table from where destination and target are configured.
 
-!![Image Description](/images/Pasted%20image%2020250305201409.png)
+![[Pasted image 20250305201409.png]]
 
 
 To connect our VPC to the internet there is something present known as the Internet Gateway, that allows to send data out to the internet, egress traffic. And allows data to travel from the internet to the vpc, ingress traffic. There can be only one internet gateway per vpc.
@@ -52,10 +52,10 @@ so essentially thats a subset of the overall available addresses and this is why
 A high level overview of each of the component:
  
 
-!![Image Description](/images/Pasted%20image%2020250306094316.png)
+![[Pasted image 20250306094316.png]]
 
 
-!![Image Description](/images/Pasted%20image%2020250306094724.png)
+![[Pasted image 20250306094724.png]]
 
 
 
@@ -68,10 +68,10 @@ Rules and Guidelines
 -  The first four and last IP address are not available for use.
 - AWS recommend to use CIDR blocks from the RFC1918 ranges:
 
-!![Image Description](/images/Pasted%20image%2020250306203630.png)
+![[Pasted image 20250306203630.png]]
 
 
-!![Image Description](/images/Pasted%20image%2020250306203827.png)
+![[Pasted image 20250306203827.png]]
 
 10.0.0.0/16
 
@@ -87,4 +87,4 @@ Additional Considerations
 - Consider deploying application tiers per subnet
 - VPC peering requires non-overlapping CIDR blocks.
 -
-!![Image Description](/images/Pasted%20image%2020250306204321.png)
+![[Pasted image 20250306204321.png]]
