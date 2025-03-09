@@ -1,7 +1,7 @@
 ---
 title: Shazam's Algorithm
 date: 2025-01-27
-draft: true
+draft: false
 tags:
 ---
 

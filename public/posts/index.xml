@@ -6,6 +6,215 @@
     <description>Recent content in Posts on Terminal</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
-    <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 06 Mar 2025 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AWS Networking</title>
+      <link>/posts/aws-networking/</link>
+      <pubDate>Thu, 06 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/aws-networking/</guid>
+      <description>&lt;p&gt;Networking, one of the core concepts when it comes to backend engineering.
+What is the very first that comes into your mind when you hear the word networking.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s meeting/contacting/communication new people/objects/servers.&lt;/p&gt;
+&lt;p&gt;In this blog we&amp;rsquo;ll specifically learn about networking in the context of our aws stack.&lt;/p&gt;
+&lt;h2 id=&#34;virtual-private-cloud&#34;&gt;Virtual Private Cloud&lt;/h2&gt;
+&lt;p&gt;A &lt;strong&gt;Virtual Private Cloud (VPC)&lt;/strong&gt; is like your own private, customizable, and secure space in the cloud. It’s where you can build, organize, and protect your applications and data, just like building and securing a house in a gated community.&lt;/p&gt;</description>
+      <content>&lt;p&gt;Networking, one of the core concepts when it comes to backend engineering.
+What is the very first that comes into your mind when you hear the word networking.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s meeting/contacting/communication new people/objects/servers.&lt;/p&gt;
+&lt;p&gt;In this blog we&amp;rsquo;ll specifically learn about networking in the context of our aws stack.&lt;/p&gt;
+&lt;h2 id=&#34;virtual-private-cloud&#34;&gt;Virtual Private Cloud&lt;/h2&gt;
+&lt;p&gt;A &lt;strong&gt;Virtual Private Cloud (VPC)&lt;/strong&gt; is like your own private, customizable, and secure space in the cloud. It’s where you can build, organize, and protect your applications and data, just like building and securing a house in a gated community.&lt;/p&gt;
+&lt;p&gt;VPC&amp;rsquo;s in the context of AWS can live inside a region, they cannot communicate across regions.
+A VPC is a logically isolated portion of the AWS cloud within a region.&lt;/p&gt;
+&lt;p&gt;Inside a VPC we can create multiple subnets within an availability zone. A subnet is always assigned to a singe availability zone but there can be many subnets in a single availability zone.
+It can&amp;rsquo;t span across multiple az&amp;rsquo;s.&lt;/p&gt;
+&lt;p&gt;VPC Router - It takes care of all the routing and data connection that goes out of the subnet , i can be routed to another subnet or somewhere outside in the internet.
+The vpc router is not something that we can see all we see is the route table from where destination and target are configured.&lt;/p&gt;
+&lt;p&gt;!&lt;img src=&#34;/images/Pasted%20image%2020250305201409.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
+&lt;p&gt;To connect our VPC to the internet there is something present known as the Internet Gateway, that allows to send data out to the internet, egress traffic. And allows data to travel from the internet to the vpc, ingress traffic. There can be only one internet gateway per vpc.&lt;/p&gt;
+&lt;p&gt;We configure our route table to the internet gateway id that tells it to send all the traffic that doesn&amp;rsquo;t fit one of the networks in the route table to the internet gateway.&lt;/p&gt;
+&lt;p&gt;There can be multiple vpc&amp;rsquo;s in a single aws region
+Each vpc has a CIDR block.
+CIDR stands for Classless Interdomain Routing
+CIDR block is the overall block of addresses from which you then create the addresses we assign to the subnet. So it&amp;rsquo;s kind of like a master block of addresses.
+Each vpc has a different block of IP addresses .&lt;/p&gt;
+&lt;p&gt;From the CIDR block we can then create the network id&amp;rsquo;s for our subnet.
+And they fit within the overall address block. But they have a different subnet mask,
+so essentially thats a subset of the overall available addresses and this is why it&amp;rsquo;s really important to make sure we specify our cidr blocks correctly so that we have enough networks and enough hosts per network.&lt;/p&gt;
+&lt;p&gt;A high level overview of each of the component:&lt;/p&gt;
+&lt;p&gt;!&lt;img src=&#34;/images/Pasted%20image%2020250306094316.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
+&lt;p&gt;!&lt;img src=&#34;/images/Pasted%20image%2020250306094724.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
+&lt;h3 id=&#34;defining-vpc-cidr-blocks&#34;&gt;Defining VPC CIDR Blocks&lt;/h3&gt;
+&lt;p&gt;Rules and Guidelines&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;CIDR block size can be between /16 and /28&lt;/li&gt;
+&lt;li&gt;The CIDR block must not overlap with any existing CIDR block that&amp;rsquo;s associated with the VPC&lt;/li&gt;
+&lt;li&gt;You cannot increase or decrease the size of an existing CIDR block.&lt;/li&gt;
+&lt;li&gt;The first four and last IP address are not available for use.&lt;/li&gt;
+&lt;li&gt;AWS recommend to use CIDR blocks from the RFC1918 ranges:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;!&lt;img src=&#34;/images/Pasted%20image%2020250306203630.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
+&lt;p&gt;!&lt;img src=&#34;/images/Pasted%20image%2020250306203827.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
+&lt;p&gt;10.0.0.0/16&lt;/p&gt;
+&lt;p&gt;Subnet 1 - 10.0.1.0/24
+Subnet 2 - 10.0.2.0/24&lt;/p&gt;
+&lt;p&gt;Each of the subnet will have 254 addresses to allot to the ec2.&lt;/p&gt;
+&lt;p&gt;Additional Considerations&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Ensure you have enough networks and hosts&lt;/li&gt;
+&lt;li&gt;Bigger CIDR blocks are typically better (more flexibility)&lt;/li&gt;
+&lt;li&gt;Smaller subnets are OK for most use cases&lt;/li&gt;
+&lt;li&gt;Consider deploying application tiers per subnet&lt;/li&gt;
+&lt;li&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+      &lt;tr&gt;
+          &lt;th&gt;VPC peering requires non-overlapping CIDR blocks.&lt;/th&gt;
+      &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+      &lt;tr&gt;
+          &lt;td&gt;!&lt;img src=&#34;/images/Pasted%20image%2020250306204321.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+</content>
+    </item>
+    
+    <item>
+      <title>Shazam&#39;s Algorithm</title>
+      <link>/posts/shazams-algorithm/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/shazams-algorithm/</guid>
+      <description>&lt;p&gt;Shazam, the music finding app.&lt;/p&gt;
+&lt;p&gt;Hearing the name and utility it provides. The first thought anyone would&amp;rsquo;ve in their mind about the underlying tech would be that they have to be using some kind of CNN (convolutional neural network) model in their machine learning algorithm.&lt;/p&gt;
+&lt;p&gt;But that&amp;rsquo;s not the reality Shazam AI is not a reality. So what algorithm are they actually using and why this is so fast in searching from a billion songs out there in the world.&lt;/p&gt;</description>
+      <content>&lt;p&gt;Shazam, the music finding app.&lt;/p&gt;
+&lt;p&gt;Hearing the name and utility it provides. The first thought anyone would&amp;rsquo;ve in their mind about the underlying tech would be that they have to be using some kind of CNN (convolutional neural network) model in their machine learning algorithm.&lt;/p&gt;
+&lt;p&gt;But that&amp;rsquo;s not the reality Shazam AI is not a reality. So what algorithm are they actually using and why this is so fast in searching from a billion songs out there in the world.&lt;/p&gt;
+&lt;p&gt;Their algorithm consists for various audio transformations and utilising theories from the past. And simply playing around with the frequencies of the audio.
+These things just made me curious and can&amp;rsquo;t help myself but to deeply understand each aspect of Shazam&amp;rsquo;s algorithm to understand Why it works the way it work. And how FFT ( Fast Fourier Transformation ) utilised in the process. So, as I do my research and learn new things on the go, its better that I document everything, being beneficial for both, staying in my mind for a longer time and helping others who also want to understand the algorithm.&lt;/p&gt;
+&lt;p&gt;Also after figuring out the technical details of the algorithm I will be developing my own version of it in Go Lang.&lt;/p&gt;
+&lt;p&gt;Overview of the most important components/processes of the algorithm.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Audio Sampling&lt;/li&gt;
+&lt;li&gt;FT (Fourier Transform)&lt;/li&gt;
+&lt;li&gt;Spectograms&lt;/li&gt;
+&lt;li&gt;Hashing and Searching&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;!&lt;img src=&#34;/images/Pasted%20image%2020250303162835.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
+&lt;h1 id=&#34;audio-sampling--&#34;&gt;Audio Sampling -&lt;/h1&gt;
+&lt;p&gt;What is a sound?&lt;/p&gt;
+&lt;p&gt;A sound is just a collection of waves travelling through a medium at a certain frequency and with an amplitude which an be decrypted by the human ears.&lt;/p&gt;
+&lt;p&gt;There are mainly two forms of audio&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Analog&lt;/li&gt;
+&lt;li&gt;Digital&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Sound in its natural form is a analog signal, analog audio represents sounds as a continuous electrical signal that mirrors the original sound wave.
+Digital audio , is the discrete numerical value converted from analogs audio (audio being converted to bits).&lt;/p&gt;
+&lt;p&gt;Our traditional recording devices already have systems in place which held the transformation of an analog audio signal into a discrete numerical bits ready to be stored as a mp3 file.&lt;/p&gt;
+&lt;p&gt;The transformation of audio from analog to digital is not lossless, there can be a loss of sound in the process. But using several techniques like changing the sampling rate and applying Dithering the transformation from analog to digital is almost indistinguishable.&lt;/p&gt;
+&lt;h2 id=&#34;fourier-transformation--&#34;&gt;Fourier Transformation -&lt;/h2&gt;
+&lt;p&gt;The most important algorithm of all time. FT is used everywhere there is radio waves and signals involved be it radar, sonar, 5G and Wi-Fi  as well.&lt;/p&gt;
+&lt;p&gt;At the time of its invention the only purpose of the Fast Fourier Transform algorithm was to detect underground atomic explosions, to prevent the soviet from carrying out their atomic testing underground.&lt;/p&gt;
+&lt;p&gt;A fourier transform is a way of decomposing a signal into pure sine waves that allows
+This transformation enables critical analysis and processing of signals by breaking them into their constituent sinusoidal components.&lt;/p&gt;
+&lt;p&gt;Audio is recorded in time-domain. The time domain signal represents the change of amplitude over time, using the FFT it is possible to represent any time-domain signal by simply giving the frequencies, amplitudes and phases corresponding to each sinusoid.&lt;/p&gt;
+&lt;p&gt;!&lt;img src=&#34;/images/Pasted%20image%2020250305141720.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll be implementing the FFT in Go,&lt;/p&gt;
+&lt;h2 id=&#34;spectrograms--&#34;&gt;Spectrograms -&lt;/h2&gt;
+&lt;p&gt;The FFT algorithm outputs a spectrogram of a particular wave.&lt;/p&gt;
+&lt;p&gt;A spectrogram is a visual representation of the frequency content of a signal.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;The x-axis repesents time
+ The y-axis represents frequency
+ The color or intensity represents the amplitude of each frequency at a given  time.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Shazam leverages these spectrograms to create a unique fingerprint for each song.&lt;/p&gt;
+&lt;p&gt;Shazam scans all the local peaks. These are the points where the amplitude of a particular frequency is comparatively high.
+Peaks are robust to noise because they represent most dominant and distinctive frequencies in the audio.
+Now these peaks are used as a key in a hash table, other columns in the hash table are&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Time (the time at which the peak appeared in the audio)&lt;/li&gt;
+&lt;li&gt;Sound Id&lt;/li&gt;
+&lt;li&gt;Artist&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Storing the time with the peaks only increases certainty as the recorded sound by the user will not always be from the start. It can be from any timeframe and therefore it is necessary to add time as a factor of search.&lt;/p&gt;
+&lt;h2 id=&#34;hashing-and-searching--&#34;&gt;Hashing and Searching -&lt;/h2&gt;
+&lt;p&gt;For Hashing, Shazam uses something known as combinatorial hashing.
+Combinatorial hashing refers to the process of creating a hash (a unique identifier) by combining &lt;strong&gt;multiple features&lt;/strong&gt; extracted from a signal. In the context of Shazam it is the time-frequency peaks&lt;/p&gt;
+&lt;p&gt;Storing these in a Hash Table will give us a o(1) time complexity while searching through the database.&lt;/p&gt;
+&lt;p&gt;!&lt;img src=&#34;/images/Pasted%20image%2020250305145400.png&#34; alt=&#34;Image Description&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Database Lookup&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Shazam’s database contains &lt;strong&gt;precomputed hashes&lt;/strong&gt; for millions of songs. Each hash is linked to:&lt;/p&gt;
+&lt;p&gt;A &lt;strong&gt;song ID&lt;/strong&gt; (identifying the song).
+A &lt;strong&gt;timestamp&lt;/strong&gt; (indicating where the landmark pair occurs in the original track).&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Shazam calculates a &lt;strong&gt;confidence score&lt;/strong&gt; based on:
+The &lt;strong&gt;number of matching hashes&lt;/strong&gt;.
+The &lt;strong&gt;consistency of the timestamp alignments&lt;/strong&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If the confidence score exceeds a threshold, the song is identified and returned to the user.&lt;/p&gt;
+&lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;Converting the input mp3 file into wav.
+Why wav? WAV is known for its high resolution, it helps us in retaining the high quality of audio even in large audio files.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;func mp3ToWav(file multipart.File) ([]byte, error) {&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;decoder, err := mp3.NewDecoder(file)&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;if err != nil {&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;return nil, fmt.Errorf(&amp;quot;failed to decode MP3: %v&amp;quot;, err)&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;}&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;var wavBuffer bytes.Buffer&lt;/code&gt;&lt;br&gt;
+&lt;code&gt;enc := wav.NewEncoder(&amp;amp;wavBuffer, decoder.SampleRate(), 16, 1, 1)&lt;/code&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;`buf := make([]byte, 1024)`  
+`intBuffer := &amp;amp;audio.IntBuffer{`  
+   `Format: &amp;amp;audio.Format{`  
+      `NumChannels: 1,`  
+      `SampleRate:  decoder.SampleRate(),`  
+   `},`  
+   `Data: make([]int, 0, 1024),`   
+`}`  
+
+`for {`  
+   `n, err := decoder.Read(buf)`  
+   `if err == io.EOF {`  
+      `break`  
+   `}`  
+   `if err != nil {`  
+      `return nil, fmt.Errorf(&amp;quot;failed to read MP3 data: %v&amp;quot;, err)`  
+   `}`  
+
+   `for i := 0; i &amp;lt; n; i += 2 {`  
+      `sample := int16(buf[i]) | int16(buf[i+1])&amp;lt;&amp;lt;8`  
+      `intBuffer.Data = append(intBuffer.Data, int(sample))`  
+   `}`  
+   `if err := enc.Write(intBuffer); err != nil {`  
+      `return nil, fmt.Errorf(&amp;quot;failed to write WAV data: %v&amp;quot;, err)`  
+   `}`  
+   `intBuffer.Data = intBuffer.Data[:0]`  
+`}`  
+
+`if err := enc.Close(); err != nil {`  
+   `return nil, fmt.Errorf(&amp;quot;failed to close WAV encoder: %v&amp;quot;, err)`  
+`}`  
+
+`return wavBuffer.Bytes(), nil`  
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;}&lt;/code&gt;&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Next step after generating our wav file will be creating a spectogram out of it, it&amp;rsquo;ll be done using the STFT (Short-Time Fourier Transform). &lt;em&gt;STFT&lt;/em&gt; is an extension of FFT that computes the Fourier Transform of short, overlapping segments of a signal over time.&lt;/li&gt;
+&lt;/ol&gt;
+</content>
+    </item>
+    
   </channel>
 </rss>
