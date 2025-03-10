@@ -86,5 +86,103 @@ Additional Considerations
 - Smaller subnets are OK for most use cases
 - Consider deploying application tiers per subnet
 - VPC peering requires non-overlapping CIDR blocks.
--
+
 ![[Pasted image 20250306204321.png]]
+
+
+## Creating a custom vpc.
+
+![[Pasted image 20250309222000.png]]
+
+ We're going to create a vpc with a 10.0.0.0/16 CIDR block.
+ 
+ The 1a 1b in the subnet name are associated to the availability zone they're present in.
+ 
+ Also the private and public subn. ets have different route table, the MAIN table has a route to internet.
+
+To create a new vpc, open the vpc dashboard  -> Your VPC's  -> Create VPC.
+
+Step 1. Give a name to the vpc 
+
+Step 2. Assign a cidr block to the vpc.
+
+Step 3. Open the actions tab and also enable the domain hostname. That means we'll get the dns hostname for our ec2 instances.
+
+Step 4. Create subnets
+     i. Subnets tab -> Create subnet, select the vpc created before
+     ii. Give a name to your subnet
+     iii. Associate it to an availability zone
+     iv. Assign a IPv4 CIDR block to it
+
+Likewise create all the 4 subnets.
+
+Step 5. For our public subnets -> Go to setting -> Modify auto-assign IP settings and enable the auto-assign public IPv4 address.
+
+Step 6. Create route table for the private subnets -> Go to the route table dashboard -> Create route table
+    i. Enter a name for our route table
+    ii. Select a vpc
+
+Step 7. Associate route table to the private subnet -> From the route table dashboard -> Go to edit subnet associations -> Select the private subnets.
+
+
+Step 8. Creating the internet gateway  -> Go to the internet gateway dashboard -> Create internet gateway , give it a name and create the gateway.
+
+Step 9. Attaching the internet gateway -> From the internet gateways dashboard -> Go to actions -> Attach to VPC.
+
+Step 10. Adding a route to the internet gateway from our MAIN route table -> Go to route tables dashboard, select the public route table -> Select the routes tab -> Edit route -> Add route -> select 0.0.0.0/0 -> select our internet gateway as the target.
+
+
+## Launching EC2 instances in the vpc
+
+Create a NAT gateway.
+
+What is a NAT gateway? 
+
+-> NAT gateway is a service that allows private network resources to access the internet while keeping them secure. 
+It translates private IP addresses to public IP addresses.
+
+Why do we need a NAT gateway? 
+
+-> After launching an ec2 instance, we need to get some binaries downloaded for which we need to have a internet connection & to be able to connect to the internet from our private subnet we need to have a NAT gateway.
+
+After creating the NAT gateway, we have to alter the route table of our private subnet, add an ip address of 0.0.0.0/0 and associate it to the NAT gateway.
+
+
+Create a Security Group
+
+-> Security group is a firewall that allows/denies any inbound or outgoing traffic from our network, for now we'll allow all the traffic from both inbound and outbound.
+
+Launching an instance using the cli
+
+```
+aws ec2 run-instances --image-id <imageid> --instance-type <value> --security-group-ids <value> --subnet-id <value> --key-name <value> --user-data file:// <value>
+```
+
+
+## Security Groups and Network ACLs
+
+
+![[Pasted image 20250310142422.png]]
+
+
+Both network acl and security groups are two different kinds of firewall, 
+network acl is a firewall acting at the subnet level whereas security groups are applied at the instance level, the network interface of the instances.
+
+Stateful vs Stateless Firewalls
+
+
+![[Pasted image 20250310143109.png]]
+
+
+The security group is a stateful firewall whereas the network acl is a stateless firewall.
+The whole concept of stateful and stateless just revolves around how different firewall investigates the return traffic.
+
+As in the picture above. 
+A client connecting to our webserver, which is considered as an inbound traffic has the entry in the route table accordingly.
+ Security groups automatically allows the return traffic thus stateful.
+Whereas network acls do check for the outbound traffic even if the outbound message is going to the same connection from which it has received some incoming message.
+
+Security groups don't have to have a rule for the return traffic but we might need an outbound rule for traffic going out from our instances or when our instances are initiating connections outbound.
+
+![[Pasted image 20250310144533.png]]
+

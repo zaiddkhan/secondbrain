@@ -232,21 +232,58 @@ Subnet 2 - 10.0.2.0/24</p>
 <li>Bigger CIDR blocks are typically better (more flexibility)</li>
 <li>Smaller subnets are OK for most use cases</li>
 <li>Consider deploying application tiers per subnet</li>
-<li>
-<table>
-  <thead>
-      <tr>
-          <th>VPC peering requires non-overlapping CIDR blocks.</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td>![[Pasted image 20250306204321.png]]</td>
-      </tr>
-  </tbody>
-</table>
-</li>
+<li>VPC peering requires non-overlapping CIDR blocks.</li>
 </ul>
+<p>![[Pasted image 20250306204321.png]]</p>
+<h2 id="creating-a-custom-vpc">Creating a custom vpc.<a href="#creating-a-custom-vpc" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>![[Pasted image 20250309222000.png]]</p>
+<p>We&rsquo;re going to create a vpc with a 10.0.0.0/16 CIDR block.</p>
+<p>The 1a 1b in the subnet name are associated to the availability zone they&rsquo;re present in.</p>
+<p>Also the private and public subn. ets have different route table, the MAIN table has a route to internet.</p>
+<p>To create a new vpc, open the vpc dashboard  -&gt; Your VPC&rsquo;s  -&gt; Create VPC.</p>
+<p>Step 1. Give a name to the vpc</p>
+<p>Step 2. Assign a cidr block to the vpc.</p>
+<p>Step 3. Open the actions tab and also enable the domain hostname. That means we&rsquo;ll get the dns hostname for our ec2 instances.</p>
+<p>Step 4. Create subnets
+i. Subnets tab -&gt; Create subnet, select the vpc created before
+ii. Give a name to your subnet
+iii. Associate it to an availability zone
+iv. Assign a IPv4 CIDR block to it</p>
+<p>Likewise create all the 4 subnets.</p>
+<p>Step 5. For our public subnets -&gt; Go to setting -&gt; Modify auto-assign IP settings and enable the auto-assign public IPv4 address.</p>
+<p>Step 6. Create route table for the private subnets -&gt; Go to the route table dashboard -&gt; Create route table
+i. Enter a name for our route table
+ii. Select a vpc</p>
+<p>Step 7. Associate route table to the private subnet -&gt; From the route table dashboard -&gt; Go to edit subnet associations -&gt; Select the private subnets.</p>
+<p>Step 8. Creating the internet gateway  -&gt; Go to the internet gateway dashboard -&gt; Create internet gateway , give it a name and create the gateway.</p>
+<p>Step 9. Attaching the internet gateway -&gt; From the internet gateways dashboard -&gt; Go to actions -&gt; Attach to VPC.</p>
+<p>Step 10. Adding a route to the internet gateway from our MAIN route table -&gt; Go to route tables dashboard, select the public route table -&gt; Select the routes tab -&gt; Edit route -&gt; Add route -&gt; select 0.0.0.0/0 -&gt; select our internet gateway as the target.</p>
+<h2 id="launching-ec2-instances-in-the-vpc">Launching EC2 instances in the vpc<a href="#launching-ec2-instances-in-the-vpc" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Create a NAT gateway.</p>
+<p>What is a NAT gateway?</p>
+<p>-&gt; NAT gateway is a service that allows private network resources to access the internet while keeping them secure.
+It translates private IP addresses to public IP addresses.</p>
+<p>Why do we need a NAT gateway?</p>
+<p>-&gt; After launching an ec2 instance, we need to get some binaries downloaded for which we need to have a internet connection &amp; to be able to connect to the internet from our private subnet we need to have a NAT gateway.</p>
+<p>After creating the NAT gateway, we have to alter the route table of our private subnet, add an ip address of 0.0.0.0/0 and associate it to the NAT gateway.</p>
+<p>Create a Security Group</p>
+<p>-&gt; Security group is a firewall that allows/denies any inbound or outgoing traffic from our network, for now we&rsquo;ll allow all the traffic from both inbound and outbound.</p>
+<p>Launching an instance using the cli</p>
+<pre tabindex="0"><code>aws ec2 run-instances --image-id &lt;imageid&gt; --instance-type &lt;value&gt; --security-group-ids &lt;value&gt; --subnet-id &lt;value&gt; --key-name &lt;value&gt; --user-data file:// &lt;value&gt;
+</code></pre><h2 id="security-groups-and-network-acls">Security Groups and Network ACLs<a href="#security-groups-and-network-acls" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>![[Pasted image 20250310142422.png]]</p>
+<p>Both network acl and security groups are two different kinds of firewall,
+network acl is a firewall acting at the subnet level whereas security groups are applied at the instance level, the network interface of the instances.</p>
+<p>Stateful vs Stateless Firewalls</p>
+<p>![[Pasted image 20250310143109.png]]</p>
+<p>The security group is a stateful firewall whereas the network acl is a stateless firewall.
+The whole concept of stateful and stateless just revolves around how different firewall investigates the return traffic.</p>
+<p>As in the picture above.
+A client connecting to our webserver, which is considered as an inbound traffic has the entry in the route table accordingly.
+Security groups automatically allows the return traffic thus stateful.
+Whereas network acls do check for the outbound traffic even if the outbound message is going to the same connection from which it has received some incoming message.</p>
+<p>Security groups don&rsquo;t have to have a rule for the return traffic but we might need an outbound rule for traffic going out from our instances or when our instances are initiating connections outbound.</p>
+<p>![[Pasted image 20250310144533.png]]</p>
 
       </div></div>
 
