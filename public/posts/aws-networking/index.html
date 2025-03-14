@@ -284,6 +284,51 @@ Security groups automatically allows the return traffic thus stateful.
 Whereas network acls do check for the outbound traffic even if the outbound message is going to the same connection from which it has received some incoming message.</p>
 <p>Security groups don&rsquo;t have to have a rule for the return traffic but we might need an outbound rule for traffic going out from our instances or when our instances are initiating connections outbound.</p>
 <p>![[Pasted image 20250310144533.png]]</p>
+<h2 id="vpc-peering">VPC Peering<a href="#vpc-peering" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>It allows routing internally between two instances from different vpc to each other using either private IPv4 or IPv6 addresses.
+What it means by internally that it does not goes out to the internet, its using the aws global network to route traffic between the vpc. It does get encrypted when it moves between regions.</p>
+<p>The CIDR blocks of two vpc thats needed to be connected using the vpc peering should not overlap.</p>
+<p>VPC peering connections does not support transitive routing meaning -
+if VPC A is connected to VPC B and VPC B is connected to VPC C then VPC A cannot directly connect to VPC C, we would need to establish a new vpc peering connection between A and C.</p>
+<p>![[Pasted image 20250312232049.png]]</p>
+<p>![[Pasted image 20250312232915.png]]</p>
+<h2 id="vpc-endpoints">VPC Endpoints<a href="#vpc-endpoints" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Some aws services are private and they run within a vpc like ec2 whereas other services are public as they have a public endpoint like aws s3.
+That means when we connect to amazon s3, we use a public dns name.
+What if we want to connect an ec2 to s3 but you didn&rsquo;t want to use the public internet that&rsquo;s where the vpc endpoint comes in.
+There are a few use cases to vpc endpoint wherein connecting a private ec2 instance to s3 is one of them.</p>
+<p>They are of two different types, there is a vpc interface endpoint and a vpc gateway endpoint.</p>
+<ol>
+<li>
+<p>Interface endpoint supports many aws managed services, endpoint services hosted by other AWS customers and partners and supported AWS Marketplace partner services. Gateway endpoint supports connectivity to Amazon S3 and Amazon Dynamo DB.</p>
+</li>
+<li>
+<p>Interface a group of elastic network interfaces (ENI) created by the VPC in the subnet you specify. Each ENI is assigned a private IP address and servers as the primary entry point for traffic directed to supported service.</p>
+</li>
+<li>
+<p>Gateway endpoint functions similarly to an Internet Gateway but is specifically designed to route traffic within an Amazon VPC to a predefined prefix list. This prefix list contains IP ranges used by Amazon DynamoDB and Amazon S3.</p>
+<p>Interface Endpoint
+![[Pasted image 20250314220954.png]]</p>
+<p>Gateway Endpoint</p>
+</li>
+</ol>
+<p>![[Pasted image 20250314221412.png]]</p>
+<p>![[Pasted image 20250314221440.png]]</p>
+<h2 id="aws-direct-connect">AWS Direct Connect<a href="#aws-direct-connect" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>VPN&rsquo;s typically runs over the public internet that means we&rsquo;re subject to the bandwidth constraints and the potential latency issues on the internet.
+So, one of the solutions to that is using Direct Connect. It means that we have a private connection into AWS that means it is not shared.</p>
+<p>How direct connect works is, there are AWS direct connect locations installed at various places around the world. So we need to find one near our corporate data center.</p>
+<p>In the direct connect location, AWS has a cage, they have a rack full of their own equipment and then there is a customer/partner cage, a rack full of the customer&rsquo;s equipments.</p>
+<p>![[Pasted image 20250314225637.png]]</p>
+<h2 id="vpc-flow-logs">VPC Flow Logs<a href="#vpc-flow-logs" class="hanchor" ariaLabel="Anchor">#</a> </h2>
+<p>Flow logs capture information about the IP traffic going to and from network interface in a VPC.
+Flow log data is stored using Amazon CloudWatch Logs or S3
+Flow logs can be create at the following levels:</p>
+<ul>
+<li>VPC</li>
+<li>Subnet</li>
+<li>Network Interface</li>
+</ul>
 
       </div></div>
 

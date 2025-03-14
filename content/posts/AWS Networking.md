@@ -186,3 +186,75 @@ Security groups don't have to have a rule for the return traffic but we might ne
 
 ![[Pasted image 20250310144533.png]]
 
+## VPC Peering
+
+It allows routing internally between two instances from different vpc to each other using either private IPv4 or IPv6 addresses.
+What it means by internally that it does not goes out to the internet, its using the aws global network to route traffic between the vpc. It does get encrypted when it moves between regions.
+
+The CIDR blocks of two vpc thats needed to be connected using the vpc peering should not overlap.
+
+VPC peering connections does not support transitive routing meaning -
+if VPC A is connected to VPC B and VPC B is connected to VPC C then VPC A cannot directly connect to VPC C, we would need to establish a new vpc peering connection between A and C.
+
+
+![[Pasted image 20250312232049.png]]
+
+
+
+![[Pasted image 20250312232915.png]]
+
+
+
+## VPC Endpoints
+
+Some aws services are private and they run within a vpc like ec2 whereas other services are public as they have a public endpoint like aws s3.
+That means when we connect to amazon s3, we use a public dns name.
+ What if we want to connect an ec2 to s3 but you didn't want to use the public internet that's where the vpc endpoint comes in.
+ There are a few use cases to vpc endpoint wherein connecting a private ec2 instance to s3 is one of them.
+  
+  They are of two different types, there is a vpc interface endpoint and a vpc gateway endpoint.
+  
+
+  
+1. Interface endpoint supports many aws managed services, endpoint services hosted by other AWS customers and partners and supported AWS Marketplace partner services. Gateway endpoint supports connectivity to Amazon S3 and Amazon Dynamo DB.
+ 
+2. Interface a group of elastic network interfaces (ENI) created by the VPC in the subnet you specify. Each ENI is assigned a private IP address and servers as the primary entry point for traffic directed to supported service.
+
+
+3. Gateway endpoint functions similarly to an Internet Gateway but is specifically designed to route traffic within an Amazon VPC to a predefined prefix list. This prefix list contains IP ranges used by Amazon DynamoDB and Amazon S3.
+   
+   
+   Interface Endpoint
+   ![[Pasted image 20250314220954.png]]
+   
+
+     Gateway Endpoint
+
+![[Pasted image 20250314221412.png]]
+
+
+![[Pasted image 20250314221440.png]]
+
+
+
+## AWS Direct Connect
+
+
+VPN's typically runs over the public internet that means we're subject to the bandwidth constraints and the potential latency issues on the internet.
+So, one of the solutions to that is using Direct Connect. It means that we have a private connection into AWS that means it is not shared.
+
+How direct connect works is, there are AWS direct connect locations installed at various places around the world. So we need to find one near our corporate data center.
+
+ In the direct connect location, AWS has a cage, they have a rack full of their own equipment and then there is a customer/partner cage, a rack full of the customer's equipments.
+ 
+ ![[Pasted image 20250314225637.png]]
+
+
+## VPC Flow Logs
+
+Flow logs capture information about the IP traffic going to and from network interface in a VPC.
+Flow log data is stored using Amazon CloudWatch Logs or S3
+Flow logs can be create at the following levels:
+- VPC
+- Subnet
+- Network Interface 
